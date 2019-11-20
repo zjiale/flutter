@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'base/bottom_navigation.dart';
+import 'package:fubin/config/api.dart';
 
 void main() {
-  // debugPaintSizeEnabled = true;
+  debugPaintSizeEnabled = !true;
   runApp(MyApp());
 }
 

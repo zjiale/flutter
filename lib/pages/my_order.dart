@@ -5,6 +5,9 @@ import 'package:fubin/base/custom_route.dart';
 class myOrder extends StatefulWidget {
   @override
   _myOrderState createState() => _myOrderState();
+
+  myOrder({Key key, @required this.isCheck}) : super(key: key);
+  int isCheck;
 }
 
 class _myOrderState extends State<myOrder> {
@@ -18,7 +21,7 @@ class _myOrderState extends State<myOrder> {
           itemBuilder: (contex, i) {
             return GestureDetector(
               child: _detailInfo(),
-              onTap: () => _toDetailInfo(context),
+              onTap: () => _toDetailInfo(context, widget.isCheck),
             );
             // return new FlatButton(
             //   child:
@@ -104,9 +107,9 @@ Widget _detailInfo() {
   ));
 }
 
-_toDetailInfo(BuildContext context) {
+_toDetailInfo(BuildContext context, int isCheck) {
   Navigator.of(context).push(CustomRoute(new Scaffold(
     appBar: AppBar(title: Text('订单详情')),
-    body: detailInfo(),
+    body: detailInfo(isCheck: isCheck),
   )));
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/pages/my_order.dart';
+import 'package:fubin/base/custom_route.dart';
 import 'package:fubin/base/split.dart';
 
 class personal extends StatefulWidget {
@@ -103,12 +104,10 @@ Widget _buttonOption(Size size, BuildContext context) {
 
 // function
 _toMyOrder(BuildContext context) {
-  Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
-    return new Scaffold(
-      appBar: AppBar(
-        title: Text('我的订单'),
-      ),
-      body: myOrder(),
-    );
-  }));
+  Navigator.of(context).push(CustomRoute(new Scaffold(
+    appBar: AppBar(
+      title: Text('我的订单'),
+    ),
+    body: myOrder(isCheck: 1),
+  )));
 }
