@@ -1,38 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/pages/detail_info.dart';
 import 'package:fubin/base/custom_route.dart';
+import 'package:fubin/config/api.dart';
+import 'package:fubin/config/util.dart';
+import 'package:fubin/bean/order.dart';
 
 class myOrder extends StatefulWidget {
   @override
   _myOrderState createState() => _myOrderState();
 
   myOrder({Key key, @required this.isCheck}) : super(key: key);
-  int isCheck;
+  final int isCheck;
 }
 
-class _myOrderState extends State<myOrder> {
+class _myOrderState extends State<myOrder> with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
+  List orderList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    this._getOrder();
+  }
+
+  // 获取首页订单数据
+  _getOrder() {
+    print(123);
+    int isCheck = widget.isCheck;
+    // 需要借助工具把需要解析的对象生成对应的实体类，之后才能够借助工具进行解析
+    Map<String, dynamic> params = {
+      "id": "10DCCFAE9F3E4E9D926ADED2A8953A50",
+      "page": 0,
+      "size": 3
+    };
+    request(isCheck == 0 ? path['GetOrder'] : path['GetSuccessOrder'],
+            params: params)
+        .then((res) {
+      Order order = new Order(res);
+      if (order.code == 0) {
+        // setState(() {
+        //   widget.isCheck == 0
+        //       ? orderList =
+        //           order.datas.where((item) => item.isOk == 'N').toList()
+        //       : orderList = order.datas;
+        // });
+        setState(() {
+          orderList = order.datas;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.all(5.0),
         child: ListView.builder(
           padding: EdgeInsets.only(bottom: 8.0),
-          itemCount: 1,
+          itemCount: orderList.length,
           itemBuilder: (contex, i) {
             return GestureDetector(
-              child: _detailInfo(),
+              child: _detailInfo(orderList[i]),
               onTap: () => _toDetailInfo(context, widget.isCheck),
             );
-            // return new FlatButton(
-            //   child:
-            //   onPressed: () => _toDetailInfo(),
-            // );
           },
         ));
   }
 }
 
-Widget _detailInfo() {
+Widget _detailInfo(var orderList) {
   final info = const TextStyle(fontSize: 13.0);
   final remark = const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold);
   return Card(
@@ -48,7 +84,7 @@ Widget _detailInfo() {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('现代学院2栋6666', style: info),
+                  Text(orderList.address, style: info),
                   Container(
                     margin: EdgeInsets.only(left: 7.0),
                     padding: EdgeInsets.all(1.0),
@@ -57,7 +93,7 @@ Widget _detailInfo() {
                         border: Border.all(color: Colors.green[200], width: 1),
                         borderRadius: BorderRadius.circular(3.0)),
                     child: Text(
-                      '水龙头故障',
+                      orderList.faulttype,
                       style:
                           TextStyle(fontSize: 10.0, color: Colors.green[200]),
                     ),
@@ -65,7 +101,7 @@ Widget _detailInfo() {
                 ],
               ),
             ),
-            Text('1小时前', style: info)
+            Text(orderList.createTime, style: info)
           ],
         ),
         Container(
@@ -73,7 +109,7 @@ Widget _detailInfo() {
           child: Row(
             children: <Widget>[
               Text('备注:', style: remark),
-              Text('水龙头坏了', style: remark)
+              Text(orderList.msg, style: remark)
             ],
           ),
         ),
@@ -84,20 +120,20 @@ Widget _detailInfo() {
               Text('姓名:', style: info),
               Padding(
                   padding: EdgeInsets.only(right: 5.0),
-                  child: Text('帅哥', style: info)),
+                  child: Text(orderList.name, style: info)),
               Row(
                 children: <Widget>[
                   Text('电话:', style: info),
                   Padding(
                     padding: EdgeInsets.only(top: 3.0),
                     child:
-                        Text('15602295985', style: TextStyle(fontSize: 12.0)),
+                        Text(orderList.phone, style: TextStyle(fontSize: 12.0)),
                   )
                 ],
               )
             ]),
             Text(
-              '已完成',
+              orderList.isOk == 'N' ? '进行中' : '已完成',
               style: TextStyle(color: Colors.orange[200]),
             )
           ],
