@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/pages/detail_info.dart';
 import 'package:fubin/base/custom_route.dart';
-import 'package:fubin/config/api.dart';
-import 'package:fubin/config/util.dart';
-import 'package:fubin/bean/order.dart';
+import 'package:fubin/model/order_list_model.dart';
+// import 'package:fubin/config/api.dart';
+// import 'package:fubin/config/util.dart';
+// import 'package:fubin/bean/order.dart';
+import 'package:provider/provider.dart';
 
 class myOrder extends StatefulWidget {
   @override
@@ -15,52 +17,27 @@ class myOrder extends StatefulWidget {
 
 class _myOrderState extends State<myOrder> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
-  List orderList = [];
+  var _orderList;
 
   @override
   void initState() {
     super.initState();
-    this._getOrder();
-  }
-
-  // 获取首页订单数据
-  _getOrder() {
-    print(123);
-    int isCheck = widget.isCheck;
-    // 需要借助工具把需要解析的对象生成对应的实体类，之后才能够借助工具进行解析
-    Map<String, dynamic> params = {
-      "id": "10DCCFAE9F3E4E9D926ADED2A8953A50",
-      "page": 0,
-      "size": 3
-    };
-    request(isCheck == 0 ? path['GetOrder'] : path['GetSuccessOrder'],
-            params: params)
-        .then((res) {
-      Order order = new Order(res);
-      if (order.code == 0) {
-        // setState(() {
-        //   widget.isCheck == 0
-        //       ? orderList =
-        //           order.datas.where((item) => item.isOk == 'N').toList()
-        //       : orderList = order.datas;
-        // });
-        setState(() {
-          orderList = order.datas;
-        });
-      }
+    WidgetsBinding.instance.addPersistentFrameCallback((_) {
+      Provider.of<OrderListModel>(context).getOrder();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    List _orderList = Provider.of<OrderListModel>(context).orderList;
     return Container(
         margin: EdgeInsets.all(5.0),
         child: ListView.builder(
           padding: EdgeInsets.only(bottom: 8.0),
-          itemCount: orderList.length,
+          itemCount: _orderList.length,
           itemBuilder: (contex, i) {
             return GestureDetector(
-              child: _detailInfo(orderList[i]),
+              child: _detailInfo(_orderList[i]),
               onTap: () => _toDetailInfo(context, widget.isCheck),
             );
           },
@@ -71,6 +48,7 @@ class _myOrderState extends State<myOrder> with AutomaticKeepAliveClientMixin {
 Widget _detailInfo(var orderList) {
   final info = const TextStyle(fontSize: 13.0);
   final remark = const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold);
+
   return Card(
       child: Padding(
     padding: EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 12.0),
