@@ -5,9 +5,6 @@ import 'package:fubin/base/loading.dart';
 import 'package:fubin/pages/detail_info.dart';
 import 'package:fubin/base/custom_route.dart';
 import 'package:fubin/model/order_list_model.dart';
-// import 'package:fubin/config/api.dart';
-// import 'package:fubin/config/util.dart';
-// import 'package:fubin/bean/order.dart';
 import 'package:provider/provider.dart';
 
 class myOrder extends StatefulWidget {
@@ -25,15 +22,15 @@ class _myOrderState extends State<myOrder> with AutomaticKeepAliveClientMixin {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      const timeout = const Duration(seconds: 5);
-      new Timer(timeout, Provider.of<OrderListModel>(context).getOrder());
+      Provider.of<OrderListModel>(context).getOrder();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    List list = Provider.of<OrderListModel>(context).orderList;
-    if (list != null) {
+    final orderList = Provider.of<OrderListModel>(context).orderList;
+    List list = orderList != null ? orderList : [];
+    if (list.length > 0) {
       return Container(
           margin: EdgeInsets.all(5.0),
           child: ListView.builder(
