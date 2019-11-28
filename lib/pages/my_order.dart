@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:fubin/base/loading.dart';
 import 'package:fubin/pages/detail_info.dart';
 import 'package:fubin/base/custom_route.dart';
 import 'package:fubin/model/order_list_model.dart';
@@ -17,31 +20,37 @@ class myOrder extends StatefulWidget {
 
 class _myOrderState extends State<myOrder> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
-  var _orderList;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPersistentFrameCallback((_) {
-      Provider.of<OrderListModel>(context).getOrder();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      const timeout = const Duration(seconds: 5);
+      new Timer(timeout, Provider.of<OrderListModel>(context).getOrder());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    List _orderList = Provider.of<OrderListModel>(context).orderList;
-    return Container(
-        margin: EdgeInsets.all(5.0),
-        child: ListView.builder(
-          padding: EdgeInsets.only(bottom: 8.0),
-          itemCount: _orderList.length,
-          itemBuilder: (contex, i) {
-            return GestureDetector(
-              child: _detailInfo(_orderList[i]),
-              onTap: () => _toDetailInfo(context, widget.isCheck),
-            );
-          },
-        ));
+    List list = Provider.of<OrderListModel>(context).orderList;
+    if (list != null) {
+      return Container(
+          margin: EdgeInsets.all(5.0),
+          child: ListView.builder(
+            padding: EdgeInsets.only(bottom: 8.0),
+            itemCount: list.length,
+            itemBuilder: (contex, i) {
+              return GestureDetector(
+                child: _detailInfo(list[i]),
+                onTap: () => _toDetailInfo(context, widget.isCheck),
+              );
+            },
+          ));
+    } else {
+      return Container(
+        child: loading(),
+      );
+    }
   }
 }
 

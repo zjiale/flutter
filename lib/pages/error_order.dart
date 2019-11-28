@@ -9,15 +9,16 @@ class errorOrder extends StatefulWidget {
 }
 
 class _errorOrderState extends State<errorOrder> {
-  final orderList = OrderListModel();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: new Text("故障订单"),
       ),
-      body: ChangeNotifierProvider.value(value: orderList, child: myOrder(isCheck: 0)),
+      body: ChangeNotifierProvider(
+        builder: (context) => OrderListModel(),
+        child: myOrder(isCheck: 0),
+      ),
     );
   }
 }
