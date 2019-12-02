@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fubin/base/loading.dart';
+import 'package:fubin/model/inherited_check.dart';
 import 'package:fubin/pages/detail_info.dart';
 import 'package:fubin/base/custom_route.dart';
 import 'package:fubin/model/order_list_model.dart';
@@ -10,9 +11,6 @@ import 'package:provider/provider.dart';
 class myOrder extends StatefulWidget {
   @override
   _myOrderState createState() => _myOrderState();
-
-  myOrder({Key key, @required this.isCheck}) : super(key: key);
-  final int isCheck;
 }
 
 class _myOrderState extends State<myOrder> with AutomaticKeepAliveClientMixin {
@@ -29,6 +27,9 @@ class _myOrderState extends State<myOrder> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     final orderList = Provider.of<OrderListModel>(context).orderList;
+
+    final isCheck = InheritedCheck.of(context).check.isCheck;
+
     List list = orderList != null ? orderList : [];
     if (list.length > 0) {
       return Container(
@@ -39,7 +40,7 @@ class _myOrderState extends State<myOrder> with AutomaticKeepAliveClientMixin {
             itemBuilder: (contex, i) {
               return GestureDetector(
                 child: _detailInfo(list[i]),
-                onTap: () => _toDetailInfo(context, widget.isCheck),
+                onTap: () => _toDetailInfo(context, isCheck),
               );
             },
           ));
