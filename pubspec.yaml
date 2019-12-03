@@ -29,6 +29,7 @@ dependencies:
   provider: ^3.1.0+1
   flutter_spinkit: ^4.0.0
   shared_preferences: ^0.5.4+6
+  fluro: ^1.5.1
 
 dev_dependencies:
   flutter_test:

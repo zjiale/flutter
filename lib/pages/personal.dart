@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fubin/main.dart';
 import 'package:fubin/base/custom_route.dart';
 import 'package:fubin/base/split.dart';
+import 'package:fubin/config/route/navigator_util.dart';
+import 'package:fubin/model/inherited_check.dart';
 import 'package:fubin/pages/my_order.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +19,8 @@ class _personalState extends State<personal>
   Widget build(BuildContext context) {
     super.build(context);
     final size = MediaQuery.of(context).size;
+
+    final isCheck = InheritedCheck.of(context).check.isCheck;
 
     // 样式布局
     Widget _userInfo() {
@@ -125,8 +128,9 @@ _toMyOrder(BuildContext context) {
 _logout(BuildContext context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.remove('userInfo');
-  Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => MyApp()),
-      (route) => route == null);
+  NavigatorUtil.logout(context);
+  // Navigator.pushAndRemoveUntil(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => HomePage()),
+  //     (route) => route == null);
 }

@@ -6,9 +6,10 @@ class loading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         SpinKitWave(
-          color: Colors.white,
+          color: Colors.blue[200],
           type: SpinKitWaveType.center,
         ),
         Text('正在加载数据中')

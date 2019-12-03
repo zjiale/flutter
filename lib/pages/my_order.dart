@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:fubin/base/loading.dart';
 import 'package:fubin/model/inherited_check.dart';
@@ -13,9 +11,7 @@ class myOrder extends StatefulWidget {
   _myOrderState createState() => _myOrderState();
 }
 
-class _myOrderState extends State<myOrder> with AutomaticKeepAliveClientMixin {
-  bool get wantKeepAlive => true;
-
+class _myOrderState extends State<myOrder> {
   @override
   void initState() {
     super.initState();

@@ -1,42 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fubin/model/login_info_model.dart';
-import 'package:fubin/pages/login.dart';
-import 'base/bottom_navigation.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fubin/config/route/application.dart';
+import 'package:fubin/config/route/routes.dart';
+import 'package:fubin/pages/home_page.dart';
+import 'package:fubin/utils/fluro/src/router.dart';
 
 void main() {
+  // 打开样式调试线
   debugPaintSizeEnabled = !true;
-  runApp(MyApp());
-}
 
-/// This Widget is the main application widget.
-class MyApp extends StatelessWidget {
-  static const String _Hometitle = '富斌易购';
-  var userInfo;
+  //注册 fluro routes
+  Router router = Router();
+  Routes.configureRoutes(router);
+  Application.router = router;
 
-  @override
-  Widget build(BuildContext context) {
-    Future<String> get() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var user = prefs.getString('userInfo');
-      return user;
-    }
-
-    Future<String> getUserInfo = get().then((res) {
-      userInfo = res;
-    });
-
-    return MaterialApp(
-      title: _Hometitle,
-      home: userInfo != null
-          ? BottomNavigation()
-          : ChangeNotifierProvider(
-              builder: (context) => LoginInfoModel(),
-              child: login(),
-            ),
-      // home: BottomNavigation(),
-    );
-  }
+  runApp(HomePage());
 }

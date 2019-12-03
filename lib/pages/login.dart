@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fubin/base/bottom_navigation.dart';
+import 'package:fubin/config/route/navigator_util.dart';
 import 'package:provider/provider.dart';
 import 'package:fubin/model/login_info_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -92,13 +92,14 @@ class _loginState extends State<login> {
                               await Provider.of<LoginInfoModel>(context)
                                   .userLogin(params);
                               if (prefs.getString('userInfo') != null) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            BottomNavigation()),
-                                    (route) =>
-                                        route == null); //route ==null 销毁当前页面
+                                NavigatorUtil.goHomePage(context);
+                                // Navigator.pushAndRemoveUntil(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             BottomNavigation()),
+                                //     (route) =>
+                                //         route == null); //route ==null 销毁当前页面
                               }
                             }
                           },
