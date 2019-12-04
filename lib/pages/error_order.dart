@@ -1,6 +1,6 @@
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
-import 'package:fubin/model/inherited_check.dart';
+import 'package:fubin/model/is_check_model.dart';
 import 'package:fubin/pages/my_order.dart';
 import 'package:fubin/model/order_list_model.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,7 @@ class _errorOrderState extends State<errorOrder>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final int isCheck = InheritedCheck.of(context).check.isCheck;
+    final int isCheck = Provider.of<IsCheckModel>(context).value;
 
     Future<String> get() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();

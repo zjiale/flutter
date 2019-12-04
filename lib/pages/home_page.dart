@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fubin/model/is_check_model.dart';
 import 'package:fubin/model/login_info_model.dart';
 import 'package:fubin/pages/login.dart';
 import 'package:fubin/base/bottom_navigation.dart';
@@ -23,14 +24,14 @@ class HomePage extends StatelessWidget {
     });
 
     return MaterialApp(
-      title: _Hometitle,
-      home: userInfo != null
-          ? BottomNavigation()
-          : ChangeNotifierProvider(
-              builder: (context) => LoginInfoModel(),
-              child: login(),
-            ),
-      // home: BottomNavigation(),
-    );
+        title: _Hometitle,
+        home: MultiProvider(providers: [
+          ChangeNotifierProvider.value(value: LoginInfoModel()),
+          ChangeNotifierProvider.value(
+            value: IsCheckModel(),
+          )
+        ], child: userInfo != null ? BottomNavigation() : login())
+        // home: BottomNavigation(),
+        );
   }
 }

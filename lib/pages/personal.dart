@@ -1,9 +1,9 @@
+import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
-import 'package:fubin/base/custom_route.dart';
 import 'package:fubin/base/split.dart';
 import 'package:fubin/config/route/navigator_util.dart';
-import 'package:fubin/model/inherited_check.dart';
-import 'package:fubin/pages/my_order.dart';
+import 'package:fubin/model/is_check_model.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class personal extends StatefulWidget {
@@ -19,8 +19,7 @@ class _personalState extends State<personal>
   Widget build(BuildContext context) {
     super.build(context);
     final size = MediaQuery.of(context).size;
-
-    final isCheck = InheritedCheck.of(context).check.isCheck;
+    final int isCheck = Provider.of<IsCheckModel>(context).value;
 
     // 样式布局
     Widget _userInfo() {
@@ -82,7 +81,7 @@ class _personalState extends State<personal>
                 title: Text('我的订单'),
                 trailing: Icon(Icons.arrow_forward_ios),
                 onTap: () {
-                  _toMyOrder(context);
+                  _toMyOrder(context, isCheck);
                 }),
             ListTile(
               leading: Icon(Icons.power_settings_new),
@@ -115,14 +114,25 @@ class _personalState extends State<personal>
   }
 }
 
-// function
-_toMyOrder(BuildContext context) {
-  Navigator.of(context).push(CustomRoute(new Scaffold(
-    appBar: AppBar(
-      title: Text('我的订单'),
-    ),
-    body: myOrder(),
-  )));
+// // function
+_toMyOrder(BuildContext context, int isCheck) {
+  var userInfo;
+
+  // check.changeWrap;
+
+  Map<String, dynamic> params = {"page": 0, "size": 3};
+  Future<String> get() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var user = prefs.getString('userInfo');
+    return user;
+  }
+
+  Future<String> getUserInfo = get().then((res) {
+    userInfo = convert.jsonDecode(res);
+    params["id"] = userInfo["id"];
+  }).then((_) {
+    NavigatorUtil.goSuccessOrder(context, isCheck, params);
+  });
 }
 
 _logout(BuildContext context) async {

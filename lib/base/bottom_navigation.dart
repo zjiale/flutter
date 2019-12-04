@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fubin/bean/check_entity.dart';
-import 'package:fubin/model/inherited_check.dart';
+import 'package:fubin/model/is_check_model.dart';
 import 'package:fubin/pages/error_order.dart';
 import 'package:fubin/pages/personal.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavigation extends StatefulWidget {
   @override
@@ -12,19 +12,12 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   int _currentIndex = 0;
   List<Widget> _pages;
-  Check check;
   // BottomNavigation KeepAlive
   PageController _controller;
-
-  _initData(int index) {
-    // 初始化InheritedWidget里要传得数值
-    check = new Check(index);
-  }
 
   @override
   void initState() {
     super.initState();
-    _initData(_currentIndex);
     _pages = List()
       ..add(errorOrder())
       ..add(personal()); // ..为数组得连续调用不需要每次都重新写_pages.add
@@ -39,22 +32,39 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return InheritedCheck(
-        check: check,
-        child: Scaffold(
-            body: PageView.builder(
-              physics: NeverScrollableScrollPhysics(), //pageview 禁止左右滑动
-              onPageChanged: _pageChange,
-              controller: _controller,
-              itemCount: _pages.length,
-              itemBuilder: (contex, index) => _pages[index],
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-                items: getItems(),
-                selectedItemColor: Colors.amber[800],
-                currentIndex: _currentIndex,
-                onTap: _onTapItemSelected,
-                type: BottomNavigationBarType.fixed)));
+    print(Provider.of<IsCheckModel>(context).value);
+    return Scaffold(
+      body: PageView.builder(
+        physics: NeverScrollableScrollPhysics(), //pageview 禁止左右滑动
+        onPageChanged: _pageChange,
+        controller: _controller,
+        itemCount: _pages.length,
+        itemBuilder: (context, index) => _pages[index],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+          items: getItems(),
+          selectedItemColor: Colors.amber[800],
+          currentIndex: _currentIndex,
+          onTap: _onTapItemSelected,
+          type: BottomNavigationBarType.fixed),
+      // body: Consumer<IsCheckModel>(
+      //     builder: (context, IsCheckModel isCheck, child) {
+      //       model = isCheck;
+      //       return PageView.builder(
+      //         physics: NeverScrollableScrollPhysics(), //pageview 禁止左右滑动
+      //         onPageChanged: _pageChange,
+      //         controller: _controller,
+      //         itemCount: _pages.length,
+      //         itemBuilder: (context, index) => _pages[index],
+      //       );
+      //     },
+      //     child: BottomNavigationBar(
+      //         items: getItems(),
+      //         selectedItemColor: Colors.amber[800],
+      //         currentIndex: _currentIndex,
+      //         onTap: _onTapItemSelected,
+      //         type: BottomNavigationBarType.fixed)),
+    );
   }
 
   List<BottomNavigationBarItem> getItems() {
@@ -71,13 +81,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
   }
 
   void _onTapItemSelected(int index) {
-    _initData(index);
     _controller.jumpToPage(index);
   }
 
   void _pageChange(int index) {
     if (index != _currentIndex) {
       setState(() {
+        Provider.of<IsCheckModel>(context).change(index);
         _currentIndex = index;
       });
     }

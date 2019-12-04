@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/base/loading.dart';
-import 'package:fubin/model/inherited_check.dart';
 import 'package:fubin/pages/detail_info.dart';
 import 'package:fubin/base/custom_route.dart';
+import 'package:fubin/model/is_check_model.dart';
 import 'package:fubin/model/order_list_model.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,7 @@ class _myOrderState extends State<myOrder> {
   Widget build(BuildContext context) {
     final orderList = Provider.of<OrderListModel>(context).orderList;
 
-    final isCheck = InheritedCheck.of(context).check.isCheck;
+    final int isCheck = Provider.of<IsCheckModel>(context).value;
 
     List list = orderList != null ? orderList : [];
     if (list.length > 0) {
