@@ -92,7 +92,7 @@ class _loginState extends State<login> {
                               await Provider.of<LoginInfoModel>(context)
                                   .userLogin(params);
                               if (prefs.getString('userInfo') != null) {
-                                NavigatorUtil.goHomePage(context);
+                                NavigatorUtil.goBottomNavigation(context);
                                 // Navigator.pushAndRemoveUntil(
                                 //     context,
                                 //     MaterialPageRoute(

@@ -13,15 +13,16 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<String> get() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var user = prefs.getString('userInfo');
-      return user;
-    }
+    // Future<String> get() async {
+    //   SharedPreferences prefs = await SharedPreferences.getInstance();
+    //   var user = prefs.getString('userInfo');
+    //   return user;
+    // }
 
-    Future<String> getUserInfo = get().then((res) {
-      userInfo = res;
-    });
+    // Future<String> getUserInfo = get().then((res) {
+    //   userInfo = res;
+    // });
+    print(userInfo);
 
     return MaterialApp(
         title: _Hometitle,
@@ -31,6 +32,7 @@ class HomePage extends StatelessWidget {
             value: IsCheckModel(),
           )
         ], child: userInfo != null ? BottomNavigation() : login())
+        // userInfo != null ? BottomNavigation() : login()
         // home: BottomNavigation(),
         );
   }

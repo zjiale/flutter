@@ -118,8 +118,6 @@ class _personalState extends State<personal>
 _toMyOrder(BuildContext context, int isCheck) {
   var userInfo;
 
-  // check.changeWrap;
-
   Map<String, dynamic> params = {"page": 0, "size": 3};
   Future<String> get() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

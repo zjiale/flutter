@@ -24,5 +24,6 @@ class Routes {
     router.define(bottomNavigation, handler: bottomNavigationHandler);
     router.define(login, handler: loginHandler);
     router.define(myOrder, handler: successOrderHandler);
+    router.define(detailInfo, handler: detailInfoHandler);
   }
 }

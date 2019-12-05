@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fubin/model/is_check_model.dart';
 import 'package:fubin/pages/error_order.dart';
 import 'package:fubin/pages/personal.dart';
+import 'package:fubin/model/is_check_model.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavigation extends StatefulWidget {
@@ -32,7 +32,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    print(Provider.of<IsCheckModel>(context).value);
     return Scaffold(
       body: PageView.builder(
         physics: NeverScrollableScrollPhysics(), //pageview 禁止左右滑动
@@ -47,23 +46,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
           currentIndex: _currentIndex,
           onTap: _onTapItemSelected,
           type: BottomNavigationBarType.fixed),
-      // body: Consumer<IsCheckModel>(
-      //     builder: (context, IsCheckModel isCheck, child) {
-      //       model = isCheck;
-      //       return PageView.builder(
-      //         physics: NeverScrollableScrollPhysics(), //pageview 禁止左右滑动
-      //         onPageChanged: _pageChange,
-      //         controller: _controller,
-      //         itemCount: _pages.length,
-      //         itemBuilder: (context, index) => _pages[index],
-      //       );
-      //     },
-      //     child: BottomNavigationBar(
-      //         items: getItems(),
-      //         selectedItemColor: Colors.amber[800],
-      //         currentIndex: _currentIndex,
-      //         onTap: _onTapItemSelected,
-      //         type: BottomNavigationBarType.fixed)),
     );
   }
 

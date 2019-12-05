@@ -6,8 +6,15 @@ class detailInfo extends StatefulWidget {
   @override
   _detailInfoState createState() => _detailInfoState();
 
-  detailInfo({Key key, @required this.isCheck}) : super(key: key);
   int isCheck;
+  String oid;
+  List orderList;
+  detailInfo(
+      {Key key,
+      @required this.isCheck,
+      @required this.oid,
+      @required this.orderList})
+      : super(key: key);
 }
 
 class _detailInfoState extends State<detailInfo> {
@@ -58,12 +65,16 @@ class _detailInfoState extends State<detailInfo> {
 
   @override
   Widget build(BuildContext context) {
+    var detailInfo =
+        widget.orderList.firstWhere((item) => item.msgId == widget.oid);
+    print(detailInfo);
+
     final Widget name = Container(
         margin: EdgeInsets.only(left: 5),
         child: Row(
           children: <Widget>[
             Text('姓名:', style: userInfo),
-            Text('测试测试', style: userInfo)
+            Text(detailInfo.name, style: userInfo)
           ],
         ));
 
@@ -75,7 +86,7 @@ class _detailInfoState extends State<detailInfo> {
             Padding(
               padding: EdgeInsets.only(top: 3, right: 5),
               child: Text(
-                '15602295985',
+                detailInfo.phone,
                 style: TextStyle(
                     fontSize: 17,
                     color: Color(0xFF2196F3),
@@ -106,7 +117,7 @@ class _detailInfoState extends State<detailInfo> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('水龙头故障', style: userInfo),
+                Text(detailInfo.faulttype, style: userInfo),
                 Text('现代学院',
                     style: TextStyle(
                         fontSize: 17,
@@ -124,7 +135,7 @@ class _detailInfoState extends State<detailInfo> {
                   padding: EdgeInsets.only(right: 6),
                 ),
                 Text(
-                  '2019-11-19 09:57:14',
+                  detailInfo.createTime,
                   style: TextStyle(fontSize: 15),
                 )
               ],
@@ -138,7 +149,7 @@ class _detailInfoState extends State<detailInfo> {
                 padding: EdgeInsets.only(right: 6),
               ),
               Text(
-                '现代学院9栋9999',
+                detailInfo.address,
                 style: TextStyle(fontSize: 15),
               )
             ])
@@ -169,7 +180,7 @@ class _detailInfoState extends State<detailInfo> {
     final Widget remarkContent = Container(
       alignment: Alignment.centerLeft,
       margin: EdgeInsets.only(top: 10, left: 15),
-      child: Text('水龙头故障', maxLines: 4),
+      child: Text(detailInfo.msg, maxLines: 4),
     );
 
     final Widget controlBtn = Row(

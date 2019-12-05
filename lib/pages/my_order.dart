@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/base/loading.dart';
+import 'package:fubin/config/route/navigator_util.dart';
 import 'package:fubin/pages/detail_info.dart';
 import 'package:fubin/base/custom_route.dart';
 import 'package:fubin/model/is_check_model.dart';
@@ -35,9 +36,11 @@ class _myOrderState extends State<myOrder> {
             itemCount: list.length,
             itemBuilder: (contex, i) {
               return GestureDetector(
-                child: _detailInfo(list[i]),
-                onTap: () => _toDetailInfo(context, isCheck),
-              );
+                  child: _detailInfo(list[i]),
+                  onTap: () => NavigatorUtil.goDetailInfo(
+                      context, isCheck, list[i].msgId, list)
+                  // _toDetailInfo(context, isCheck, list[i].msgId, list),
+                  );
             },
           ));
     } else {
@@ -124,9 +127,9 @@ Widget _detailInfo(var orderList) {
   ));
 }
 
-_toDetailInfo(BuildContext context, int isCheck) {
-  Navigator.of(context).push(CustomRoute(new Scaffold(
-    appBar: AppBar(title: Text('订单详情')),
-    body: detailInfo(isCheck: isCheck),
-  )));
-}
+// _toDetailInfo(BuildContext context, int isCheck, String oid, List orderList) {
+//   Navigator.of(context).push(CustomRoute(new Scaffold(
+//     appBar: AppBar(title: Text('订单详情')),
+//     body: detailInfo(isCheck: isCheck, oid: oid, orderList: orderList),
+//   )));
+// }

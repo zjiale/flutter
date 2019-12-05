@@ -9,7 +9,7 @@ class NavigatorUtil {
     Application.router.navigateTo(context, Routes.homePage, replace: true);
   }
 
-  static void goHomePage(BuildContext context) {
+  static void goBottomNavigation(BuildContext context) {
     Application.router
         .navigateTo(context, Routes.bottomNavigation, replace: true);
   }
@@ -19,5 +19,11 @@ class NavigatorUtil {
     String search1 = convert.jsonEncode(search);
     Application.router.navigateTo(
         context, Routes.myOrder + "?isCheck=$isCheck&search=$search1");
+  }
+
+  static void goDetailInfo(
+      BuildContext context, int isCheck, String oid, List orderList) {
+    Application.router.navigateTo(context,
+        Routes.detailInfo + "?isCheck=$isCheck&oid=$oid&orderList=$orderList");
   }
 }
