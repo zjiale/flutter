@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:fubin/base/Toast.dart';
+import 'package:fubin/config/TelAndSmsService.dart';
+import 'package:fubin/config/util.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:fubin/model/change_msg_model.dart';
+import 'package:provider/provider.dart';
 
 class detailInfo extends StatefulWidget {
   @override
@@ -8,21 +13,20 @@ class detailInfo extends StatefulWidget {
 
   int isCheck;
   String oid;
-  List orderList;
-  detailInfo(
-      {Key key,
-      @required this.isCheck,
-      @required this.oid,
-      @required this.orderList})
+  Map<String, dynamic> orderInfo;
+  detailInfo({Key key, @required this.isCheck, @required this.orderInfo})
       : super(key: key);
 }
 
 class _detailInfoState extends State<detailInfo> {
   static const TextStyle userInfo =
       TextStyle(fontSize: 17, fontWeight: FontWeight.bold);
+  final TelAndSmsService _service = locator<TelAndSmsService>();
+  TextEditingController _phoneController = TextEditingController();
 
   // 转单
-  Future<void> _transferTask() async {
+  Future<void> _transferTask(
+      ChangeMsgModel change, String msgId, String userId) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -37,6 +41,7 @@ class _detailInfoState extends State<detailInfo> {
               inputFormatters: <TextInputFormatter>[
                 WhitelistingTextInputFormatter.digitsOnly // 限制只输入数字
               ],
+              controller: _phoneController,
             ),
           ),
           actions: <Widget>[
@@ -49,7 +54,28 @@ class _detailInfoState extends State<detailInfo> {
             FlatButton(
               child: Text('确定'),
               onPressed: () {
-                print('确定');
+                // 关闭键盘
+                FocusScope.of(context).requestFocus(FocusNode());
+                RegExp reg = new RegExp(
+                    '^((13[0-9])|(15[^4])|(166)|(17[0-8])|(18[0-9])|(19[8-9])|(147,145))\\d{8}\$');
+                if (!reg.hasMatch(_phoneController.text)) {
+                  Toast.toast(context,
+                      msg: "请输入正确的手机号", position: ToastPostion.bottom);
+                } else {
+                  Map<String, dynamic> params = {
+                    "id": userId,
+                    "msgId": msgId,
+                    "phone": _phoneController.text
+                  };
+                  change.changeMsg(params).then((_) {
+                    if (change.value == 0) {
+                      _phoneController.text = "";
+                      Navigator.of(context).pop();
+                      Toast.toast(context,
+                          msg: "转单成功", position: ToastPostion.bottom);
+                    }
+                  });
+                }
               },
             ),
           ],
@@ -60,21 +86,25 @@ class _detailInfoState extends State<detailInfo> {
 
   // 上传照片
   Future _uploadImg() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await MultiImagePicker.pickImages(
+      maxImages: 12,
+      enableCamera: false,
+    );
+
+    print(image);
   }
 
   @override
   Widget build(BuildContext context) {
-    var detailInfo =
-        widget.orderList.firstWhere((item) => item.msgId == widget.oid);
-    print(detailInfo);
+    var detailInfo = widget.orderInfo;
+    ChangeMsgModel change = Provider.of<ChangeMsgModel>(context);
 
     final Widget name = Container(
         margin: EdgeInsets.only(left: 5),
         child: Row(
           children: <Widget>[
             Text('姓名:', style: userInfo),
-            Text(detailInfo.name, style: userInfo)
+            Text(detailInfo["name"], style: userInfo)
           ],
         ));
 
@@ -86,7 +116,7 @@ class _detailInfoState extends State<detailInfo> {
             Padding(
               padding: EdgeInsets.only(top: 3, right: 5),
               child: Text(
-                detailInfo.phone,
+                detailInfo["phone"],
                 style: TextStyle(
                     fontSize: 17,
                     color: Color(0xFF2196F3),
@@ -97,12 +127,19 @@ class _detailInfoState extends State<detailInfo> {
               initialValue: "",
               child: Text('(点击此处拨打或复制)',
                   style: TextStyle(fontSize: 15, color: Color(0xFF3ABBFF))),
-              onSelected: (String message) {
-                print(message.toString());
+              onSelected: (String action) {
+                switch (action) {
+                  case "call":
+                    _service.call(detailInfo["phone"]);
+                    break;
+                  case "copy":
+                    copy2clipboard(detailInfo["phone"]);
+                    break;
+                }
               },
               itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                PopupMenuItem(child: Text('拨打'), value: '拨打'),
-                PopupMenuItem(child: Text('复制'), value: '复制')
+                PopupMenuItem(child: Text('拨打'), value: 'call'),
+                PopupMenuItem(child: Text('复制'), value: 'copy')
               ],
             )
           ],
@@ -117,8 +154,8 @@ class _detailInfoState extends State<detailInfo> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(detailInfo.faulttype, style: userInfo),
-                Text('现代学院',
+                Text(detailInfo["faulttype"], style: userInfo),
+                Text(detailInfo["address"].substring(0, 4),
                     style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -135,7 +172,7 @@ class _detailInfoState extends State<detailInfo> {
                   padding: EdgeInsets.only(right: 6),
                 ),
                 Text(
-                  detailInfo.createTime,
+                  detailInfo["createTime"],
                   style: TextStyle(fontSize: 15),
                 )
               ],
@@ -149,7 +186,7 @@ class _detailInfoState extends State<detailInfo> {
                 padding: EdgeInsets.only(right: 6),
               ),
               Text(
-                detailInfo.address,
+                detailInfo["address"],
                 style: TextStyle(fontSize: 15),
               )
             ])
@@ -180,7 +217,7 @@ class _detailInfoState extends State<detailInfo> {
     final Widget remarkContent = Container(
       alignment: Alignment.centerLeft,
       margin: EdgeInsets.only(top: 10, left: 15),
-      child: Text(detailInfo.msg, maxLines: 4),
+      child: Text(detailInfo["msg"], maxLines: 4),
     );
 
     final Widget controlBtn = Row(
@@ -194,7 +231,8 @@ class _detailInfoState extends State<detailInfo> {
             children: <Widget>[
               FlatButton(
                 onPressed: () {
-                  _transferTask();
+                  _transferTask(
+                      change, detailInfo["msgId"], detailInfo["appUserId"]);
                 },
                 child: Container(
                   padding: EdgeInsets.all(8),

@@ -1,8 +1,10 @@
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
+import 'package:fubin/bean/order_entity.dart';
 import 'package:fubin/config/route/application.dart';
 import 'package:fubin/config/route/routes.dart';
+import 'package:fubin/utils/fluro_convert_util.dart';
 
 class NavigatorUtil {
   static void logout(BuildContext context) {
@@ -22,8 +24,10 @@ class NavigatorUtil {
   }
 
   static void goDetailInfo(
-      BuildContext context, int isCheck, String oid, List orderList) {
+      BuildContext context, int isCheck, Datas detailInfo) {
+    String detailInfo1 =
+        FluroConvertUtils.fluroCnParamsEncode(detailInfo.toString());
     Application.router.navigateTo(context,
-        Routes.detailInfo + "?isCheck=$isCheck&oid=$oid&orderList=$orderList");
+        Routes.detailInfo + "?isCheck=$isCheck&detailInfo=$detailInfo1");
   }
 }

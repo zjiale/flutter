@@ -37,8 +37,9 @@ class _myOrderState extends State<myOrder> {
             itemBuilder: (contex, i) {
               return GestureDetector(
                   child: _detailInfo(list[i]),
-                  onTap: () => NavigatorUtil.goDetailInfo(
-                      context, isCheck, list[i].msgId, list)
+                  onTap: () {
+                    NavigatorUtil.goDetailInfo(context, isCheck, list[i]);
+                  }
                   // _toDetailInfo(context, isCheck, list[i].msgId, list),
                   );
             },

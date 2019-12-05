@@ -1,4 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:fubin/config/ClipboardData.dart';
+import 'package:fubin/config/TelAndSmsService.dart';
+import 'package:get_it/get_it.dart';
 
 Future request(url, {params, method, contentType}) async {
   try {
@@ -16,4 +19,15 @@ Future request(url, {params, method, contentType}) async {
   } catch (e) {
     return print('ERROR:======>${e}');
   }
+}
+
+// 调用打电话发短信功能
+GetIt locator = GetIt.I;
+void setupLocator() {
+  locator.registerSingleton(TelAndSmsService());
+}
+
+void copy2clipboard(String text) {
+  ClipboardData data = new ClipboardData(text: text);
+  Clipboard.setData(data);
 }

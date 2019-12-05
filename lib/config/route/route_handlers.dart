@@ -1,6 +1,7 @@
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:fubin/base/bottom_navigation.dart';
+import 'package:fubin/model/change_msg_model.dart';
 import 'package:fubin/model/is_check_model.dart';
 import 'package:fubin/pages/detail_info.dart';
 import 'package:fubin/pages/login.dart';
@@ -57,16 +58,15 @@ var successOrderHandler = new Handler(
 var detailInfoHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   String isCheck = params["isCheck"]?.first;
-  String oid = params["oid"]?.first;
-  String orderList = params["orderList"]?.first;
-
-  print(convert.jsonDecode(orderList));
+  String orderInfo = params["detailInfo"]?.first;
 
   return new Scaffold(
     appBar: AppBar(title: Text('订单详情')),
-    body: detailInfo(
-        isCheck: FluroConvertUtils.string2int(isCheck),
-        oid: oid,
-        orderList: convert.jsonDecode(orderList)),
+    body: ChangeNotifierProvider.value(
+      value: ChangeMsgModel(),
+      child: detailInfo(
+          isCheck: FluroConvertUtils.string2int(isCheck),
+          orderInfo: FluroConvertUtils.string2map(orderInfo)),
+    ),
   );
 });
