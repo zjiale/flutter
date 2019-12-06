@@ -29,21 +29,30 @@ class _myOrderState extends State<myOrder> {
 
     List list = orderList != null ? orderList : [];
     if (list.length > 0) {
-      return Container(
-          margin: EdgeInsets.all(5.0),
-          child: ListView.builder(
-            padding: EdgeInsets.only(bottom: 8.0),
-            itemCount: list.length,
-            itemBuilder: (contex, i) {
-              return GestureDetector(
-                  child: _detailInfo(list[i]),
-                  onTap: () {
-                    NavigatorUtil.goDetailInfo(context, isCheck, list[i]);
-                  }
-                  // _toDetailInfo(context, isCheck, list[i].msgId, list),
-                  );
-            },
-          ));
+      return RefreshIndicator(
+        onRefresh: () async {
+          print(123);
+          await new Future.delayed(const Duration(seconds: 1));
+        },
+        child: Container(
+            margin: EdgeInsets.all(5.0),
+            child: ListView.builder(
+              padding: EdgeInsets.only(bottom: 8.0),
+              itemCount: list.length,
+              itemBuilder: (contex, i) {
+                return GestureDetector(
+                    child: _detailInfo(list[i]),
+                    onTap: () {
+                      NavigatorUtil.goDetailInfo(context, isCheck, list[i])
+                          .then((result) {
+                        print("$result");
+                      });
+                    }
+                    // _toDetailInfo(context, isCheck, list[i].msgId, list),
+                    );
+              },
+            )),
+      );
     } else {
       return Container(
         child: loading(),

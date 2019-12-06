@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fubin/base/Toast.dart';
 import 'package:fubin/config/TelAndSmsService.dart';
+import 'package:fubin/config/route/navigator_util.dart';
 import 'package:fubin/config/util.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:fubin/model/change_msg_model.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class detailInfo extends StatefulWidget {
@@ -86,12 +89,12 @@ class _detailInfoState extends State<detailInfo> {
 
   // 上传照片
   Future _uploadImg() async {
-    var image = await MultiImagePicker.pickImages(
-      maxImages: 12,
-      enableCamera: false,
-    );
+    File _imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-    print(image);
+    if (_imageFile != null) {
+    } else {
+      return;
+    }
   }
 
   @override
@@ -264,24 +267,29 @@ class _detailInfoState extends State<detailInfo> {
       ],
     );
 
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              name,
-              phone,
-              errorDesc,
-              Padding(padding: EdgeInsets.only(top: 10, bottom: 5)),
-              remarkTitle,
-              remarkContent,
-            ],
-          ),
-          Offstage(
-              offstage: widget.isCheck == 0 ? false : true, child: controlBtn)
-        ],
+    return WillPopScope(
+      onWillPop: () {
+        NavigatorUtil.goBackHomePage(context, "refresh");
+      },
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                name,
+                phone,
+                errorDesc,
+                Padding(padding: EdgeInsets.only(top: 10, bottom: 5)),
+                remarkTitle,
+                remarkContent,
+              ],
+            ),
+            Offstage(
+                offstage: widget.isCheck == 0 ? false : true, child: controlBtn)
+          ],
+        ),
       ),
     );
   }

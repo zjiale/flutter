@@ -23,11 +23,15 @@ class NavigatorUtil {
         context, Routes.myOrder + "?isCheck=$isCheck&search=$search1");
   }
 
-  static void goDetailInfo(
+  static Future goDetailInfo(
       BuildContext context, int isCheck, Datas detailInfo) {
     String detailInfo1 =
         FluroConvertUtils.fluroCnParamsEncode(detailInfo.toString());
-    Application.router.navigateTo(context,
+    return Application.router.navigateTo(context,
         Routes.detailInfo + "?isCheck=$isCheck&detailInfo=$detailInfo1");
+  }
+
+  static void goBackHomePage(BuildContext context, result) {
+    Navigator.pop(context, result);
   }
 }

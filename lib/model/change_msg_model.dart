@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fubin/bean/change_entity.dart';
 import 'package:fubin/config/api.dart';
@@ -15,5 +17,9 @@ class ChangeMsgModel with ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  Future finshMsg(List<File> _imgFile) {
+    return request(path['UploadImg'], params: _imgFile).then((res) {});
   }
 }
