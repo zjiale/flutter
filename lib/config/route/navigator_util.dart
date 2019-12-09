@@ -17,10 +17,9 @@ class NavigatorUtil {
   }
 
   static void goSuccessOrder(
-      BuildContext context, int isCheck, Map<String, dynamic> search) {
-    String search1 = convert.jsonEncode(search);
+      BuildContext context, int isCheck, String id, int page) {
     Application.router.navigateTo(
-        context, Routes.myOrder + "?isCheck=$isCheck&search=$search1");
+        context, Routes.myOrder + "?isCheck=$isCheck&id=$id&page=$page");
   }
 
   static Future goDetailInfo(
@@ -32,6 +31,6 @@ class NavigatorUtil {
   }
 
   static void goBackHomePage(BuildContext context, result) {
-    Navigator.pop(context, result);
+    Navigator.of(context).pop(result);
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fubin/base/bottom_navigation.dart';
 import 'package:fubin/model/change_msg_model.dart';
 import 'package:fubin/model/is_check_model.dart';
+import 'package:fubin/model/login_info_model.dart';
 import 'package:fubin/pages/detail_info.dart';
 import 'package:fubin/pages/login.dart';
 import 'package:fubin/pages/my_order.dart';
@@ -20,29 +21,39 @@ var homeHandler = new Handler(
 // 登录
 var loginHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return new login();
+  return new Login();
 });
 
 // 首页
 var bottomNavigationHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return ChangeNotifierProvider.value(
-      value: IsCheckModel(), child: new BottomNavigation());
+  return MultiProvider(
+    providers: [
+      ChangeNotifierProvider.value(
+        value: IsCheckModel(),
+      ),
+      ChangeNotifierProvider.value(
+        value: LoginInfoModel(),
+      )
+    ],
+    child: BottomNavigation(),
+  );
 });
 
 // 已完成订单列表
 var successOrderHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   String isCheck = params["isCheck"]?.first;
-  String search = params["search"]?.first;
+  String id = params["id"]?.first;
+  String page = params["page"]?.first;
 
   return MultiProvider(
     providers: [
       ChangeNotifierProvider.value(
         value: OrderListModel(
-          isCheck: FluroConvertUtils.string2int(isCheck),
-          params: convert.jsonDecode(search),
-        ),
+            isCheck: FluroConvertUtils.string2int(isCheck),
+            id: id,
+            page: FluroConvertUtils.string2int(page)),
       ),
       ChangeNotifierProvider.value(
         value: IsCheckModel(),
@@ -50,7 +61,7 @@ var successOrderHandler = new Handler(
     ],
     child: Scaffold(
       appBar: AppBar(title: new Text('我的订单')),
-      body: myOrder(),
+      body: MyOrder(),
     ),
   );
 });
@@ -64,7 +75,7 @@ var detailInfoHandler = new Handler(
     appBar: AppBar(title: Text('订单详情')),
     body: ChangeNotifierProvider.value(
       value: ChangeMsgModel(),
-      child: detailInfo(
+      child: DetailInfo(
           isCheck: FluroConvertUtils.string2int(isCheck),
           orderInfo: FluroConvertUtils.string2map(orderInfo)),
     ),

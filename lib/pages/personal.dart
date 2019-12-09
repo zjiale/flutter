@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:fubin/base/split.dart';
 import 'package:fubin/config/route/navigator_util.dart';
 import 'package:fubin/model/is_check_model.dart';
+import 'package:fubin/model/login_info_model.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class personal extends StatefulWidget {
+class Personal extends StatefulWidget {
   @override
-  _personalState createState() => _personalState();
+  _PersonalState createState() => _PersonalState();
 }
 
-class _personalState extends State<personal>
+class _PersonalState extends State<Personal>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
@@ -20,6 +20,7 @@ class _personalState extends State<personal>
     super.build(context);
     final size = MediaQuery.of(context).size;
     final int isCheck = Provider.of<IsCheckModel>(context).value;
+    var login = Provider.of<LoginInfoModel>(context);
 
     // 样式布局
     Widget _userInfo() {
@@ -81,14 +82,16 @@ class _personalState extends State<personal>
                 title: Text('我的订单'),
                 trailing: Icon(Icons.arrow_forward_ios),
                 onTap: () {
-                  _toMyOrder(context, isCheck);
+                  final String id = convert.jsonDecode(login.value)["id"];
+                  NavigatorUtil.goSuccessOrder(context, isCheck, id, 0);
                 }),
             ListTile(
               leading: Icon(Icons.power_settings_new),
               title: Text('退出登录'),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: () {
-                _logout(context);
+                login.clear();
+                NavigatorUtil.logout(context);
               },
             ),
             new split(),
@@ -115,30 +118,30 @@ class _personalState extends State<personal>
 }
 
 // // function
-_toMyOrder(BuildContext context, int isCheck) {
-  var userInfo;
+// _toMyOrder(BuildContext context, int isCheck) {
+//   final String id =
+//       convert.jsonDecode(Provider.of<LoginInfoModel>(context).value)["id"];
+//   NavigatorUtil.goSuccessOrder(context, isCheck, id, 0);
 
-  Map<String, dynamic> params = {"page": 0, "size": 3};
-  Future<String> get() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var user = prefs.getString('userInfo');
-    return user;
-  }
+//   // Map<String, dynamic> params = {"page": 0, "size": 3};
+//   // Future<String> get() async {
+//   //   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   //   var user = prefs.getString('userInfo');
+//   //   return user;
+//   // }
 
-  Future<String> getUserInfo = get().then((res) {
-    userInfo = convert.jsonDecode(res);
-    params["id"] = userInfo["id"];
-  }).then((_) {
-    NavigatorUtil.goSuccessOrder(context, isCheck, params);
-  });
-}
+//   // Future<String> getUserInfo = get().then((res) {
+//   //   userInfo = convert.jsonDecode(res);
+//   //   params["id"] = userInfo["id"];
+//   // }).then((_) {
+//   //   NavigatorUtil.goSuccessOrder(context, isCheck, params);
+//   // });
+// }
 
-_logout(BuildContext context) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.remove('userInfo');
-  NavigatorUtil.logout(context);
-  // Navigator.pushAndRemoveUntil(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => HomePage()),
-  //     (route) => route == null);
-}
+// _logout(BuildContext context) async {
+//   NavigatorUtil.logout(context);
+//   // Navigator.pushAndRemoveUntil(
+//   //     context,
+//   //     MaterialPageRoute(builder: (context) => HomePage()),
+//   //     (route) => route == null);
+// }

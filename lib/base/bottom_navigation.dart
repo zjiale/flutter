@@ -19,8 +19,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
   void initState() {
     super.initState();
     _pages = List()
-      ..add(errorOrder())
-      ..add(personal()); // ..为数组得连续调用不需要每次都重新写_pages.add
+      ..add(ErrorOrder())
+      ..add(Personal()); // ..为数组得连续调用不需要每次都重新写_pages.add
     _controller = PageController(initialPage: _currentIndex);
   }
 

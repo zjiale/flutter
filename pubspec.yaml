@@ -36,9 +36,9 @@ dependencies:
   # 打电话
   url_launcher: ^5.2.7
   get_it: ^3.0.3
-  # 缓存
-  shared_preferences: ^0.5.4+8
   image_picker: ^0.6.2+1
+  # 极光推送
+  jpush_flutter: any
 
 dev_dependencies:
   flutter_test:

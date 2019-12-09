@@ -10,18 +10,18 @@ import 'package:fubin/model/change_msg_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class detailInfo extends StatefulWidget {
+class DetailInfo extends StatefulWidget {
   @override
-  _detailInfoState createState() => _detailInfoState();
+  _DetailInfoState createState() => _DetailInfoState();
 
   int isCheck;
   String oid;
   Map<String, dynamic> orderInfo;
-  detailInfo({Key key, @required this.isCheck, @required this.orderInfo})
+  DetailInfo({Key key, @required this.isCheck, @required this.orderInfo})
       : super(key: key);
 }
 
-class _detailInfoState extends State<detailInfo> {
+class _DetailInfoState extends State<DetailInfo> {
   static const TextStyle userInfo =
       TextStyle(fontSize: 17, fontWeight: FontWeight.bold);
   final TelAndSmsService _service = locator<TelAndSmsService>();
@@ -270,6 +270,8 @@ class _detailInfoState extends State<detailInfo> {
     return WillPopScope(
       onWillPop: () {
         NavigatorUtil.goBackHomePage(context, "refresh");
+        // onWillPop需要一个bool返回值，true表示退出，false表示不退出
+        return Future.value(false);
       },
       child: Container(
         padding: EdgeInsets.all(10),

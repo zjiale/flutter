@@ -3,14 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:fubin/config/route/navigator_util.dart';
 import 'package:provider/provider.dart';
 import 'package:fubin/model/login_info_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class login extends StatefulWidget {
+class Login extends StatefulWidget {
   @override
-  _loginState createState() => _loginState();
+  _LoginState createState() => _LoginState();
 }
 
-class _loginState extends State<login> {
+class _LoginState extends State<Login> {
   GlobalKey<FormState> _loginInfo = new GlobalKey<FormState>(); //获取form对象
   String _phone;
   String _password;
@@ -21,6 +20,7 @@ class _loginState extends State<login> {
 
   @override
   Widget build(BuildContext context) {
+    var login = Provider.of<LoginInfoModel>(context);
     // 触摸收起键盘
     return new GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -79,27 +79,18 @@ class _loginState extends State<login> {
                           child: Text('登录',
                               style: TextStyle(color: Colors.blue[200])),
                           onPressed: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
                             var _form = _loginInfo.currentState;
 
                             if (_form.validate()) {
+                              // 触发text得onsave方法
                               _form.save();
                               Map<String, dynamic> params = {
                                 'name': _phone,
                                 'pwd': _password
                               };
-                              await Provider.of<LoginInfoModel>(context)
-                                  .userLogin(params);
-                              if (prefs.getString('userInfo') != null) {
+                              await login.userLogin(params);
+                              if (login.value != null) {
                                 NavigatorUtil.goBottomNavigation(context);
-                                // Navigator.pushAndRemoveUntil(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             BottomNavigation()),
-                                //     (route) =>
-                                //         route == null); //route ==null 销毁当前页面
                               }
                             }
                           },

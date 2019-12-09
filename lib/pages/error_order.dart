@@ -4,43 +4,33 @@ import 'package:fubin/model/is_check_model.dart';
 import 'package:fubin/pages/my_order.dart';
 import 'package:fubin/model/order_list_model.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fubin/model/login_info_model.dart';
 
-class errorOrder extends StatefulWidget {
+class ErrorOrder extends StatefulWidget {
   @override
-  _errorOrderState createState() => _errorOrderState();
+  _ErrorOrderState createState() => _ErrorOrderState();
 }
 
-class _errorOrderState extends State<errorOrder>
+class _ErrorOrderState extends State<ErrorOrder>
     with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
   var userInfo;
-
-  Map<String, dynamic> params = {"page": 0, "size": 3};
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final int isCheck = Provider.of<IsCheckModel>(context).value;
-
-    Future<String> get() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var user = prefs.getString('userInfo');
-      return user;
-    }
-
-    Future<String> getUserInfo = get().then((res) {
-      userInfo = convert.jsonDecode(res);
-      params["id"] = userInfo["id"];
-    });
+    print(isCheck);
+    final String id =
+        convert.jsonDecode(Provider.of<LoginInfoModel>(context).value)["id"];
 
     return Scaffold(
       appBar: AppBar(
         title: new Text("故障订单"),
       ),
       body: ChangeNotifierProvider(
-        builder: (context) => OrderListModel(isCheck: isCheck, params: params),
-        child: myOrder(),
+        builder: (context) => OrderListModel(isCheck: isCheck, id: id, page: 0),
+        child: MyOrder(),
       ),
     );
   }
