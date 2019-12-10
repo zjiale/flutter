@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fubin/config/cache.dart';
 import 'package:fubin/config/route/application.dart';
 import 'package:fubin/config/route/routes.dart';
 import 'package:fubin/config/util.dart';
@@ -18,6 +19,14 @@ void main() {
   Router router = Router();
   Routes.configureRoutes(router);
   Application.router = router;
+
+  realRunApp();
+}
+
+void realRunApp() async {
+  // 需要先异步初始化缓存插件
+  WidgetsFlutterBinding.ensureInitialized();
+  await SpUtil.getInstance();
 
   runApp(HomePage());
 }

@@ -14,40 +14,29 @@ class _MyOrderState extends State<MyOrder> {
   var orderList = [];
   int isCheck;
   bool isLoading = false; //是否正在请求新数据
+  bool offState = false; //是否显示进入页面时的圆形进度条
 
   /* 字体样式 */
   final info = const TextStyle(fontSize: 13.0);
   final remark = const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold);
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getOrderList();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    getOrderList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(builder: _buildFuture, future: getOrderList());
-  }
-
-  Widget _buildFuture(BuildContext context, AsyncSnapshot snapshot) {
-    switch (snapshot.connectionState) {
-      case ConnectionState.none:
-        print('还没有开始网络请求');
-        return Text('还没有开始网络请求');
-      case ConnectionState.active:
-        print('active');
-        return Text('ConnectionState.active');
-      case ConnectionState.waiting:
-        print('waiting');
-        return loading();
-      case ConnectionState.done:
-        print('done');
-        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-        return _createListView(context);
-      default:
-        return null;
-    }
+    return Stack(
+      children: <Widget>[
+        _createListView(context),
+        Offstage(
+          offstage: offState,
+          child: loading(),
+        )
+      ],
+    );
   }
 
   /* ListView布局 */
@@ -58,7 +47,7 @@ class _MyOrderState extends State<MyOrder> {
           margin: EdgeInsets.all(5.0),
           child: ListView.builder(
             padding: EdgeInsets.only(bottom: 8.0),
-            itemCount: orderList.length,
+            itemCount: orderList.length + 1,
             itemBuilder: (contex, i) {
               return GestureDetector(
                   child: _detailInfo(orderList[i]),
@@ -151,7 +140,8 @@ class _MyOrderState extends State<MyOrder> {
   }
 
   /* 初始化页面数据 */
-  Future getOrderList() async {
+  void getOrderList() async {
+    print(isLoading);
     if (isLoading) {
       return;
     }
@@ -165,6 +155,7 @@ class _MyOrderState extends State<MyOrder> {
     await Future.delayed(Duration(seconds: 1), () {
       setState(() {
         isLoading = false;
+        offState = true;
         orderList = Provider.of<OrderListModel>(context).orderList;
         isCheck = Provider.of<IsCheckModel>(context).value;
       });

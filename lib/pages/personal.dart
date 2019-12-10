@@ -116,32 +116,3 @@ class _PersonalState extends State<Personal>
     );
   }
 }
-
-// // function
-// _toMyOrder(BuildContext context, int isCheck) {
-//   final String id =
-//       convert.jsonDecode(Provider.of<LoginInfoModel>(context).value)["id"];
-//   NavigatorUtil.goSuccessOrder(context, isCheck, id, 0);
-
-//   // Map<String, dynamic> params = {"page": 0, "size": 3};
-//   // Future<String> get() async {
-//   //   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   //   var user = prefs.getString('userInfo');
-//   //   return user;
-//   // }
-
-//   // Future<String> getUserInfo = get().then((res) {
-//   //   userInfo = convert.jsonDecode(res);
-//   //   params["id"] = userInfo["id"];
-//   // }).then((_) {
-//   //   NavigatorUtil.goSuccessOrder(context, isCheck, params);
-//   // });
-// }
-
-// _logout(BuildContext context) async {
-//   NavigatorUtil.logout(context);
-//   // Navigator.pushAndRemoveUntil(
-//   //     context,
-//   //     MaterialPageRoute(builder: (context) => HomePage()),
-//   //     (route) => route == null);
-// }
