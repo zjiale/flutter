@@ -1,9 +1,11 @@
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:fubin/base/split.dart';
+import 'package:fubin/config/cache.dart';
 import 'package:fubin/config/route/navigator_util.dart';
 import 'package:fubin/model/is_check_model.dart';
 import 'package:fubin/model/login_info_model.dart';
+import 'package:fubin/model/index.dart' show Store;
 import 'package:provider/provider.dart';
 
 class Personal extends StatefulWidget {
@@ -19,8 +21,9 @@ class _PersonalState extends State<Personal>
   Widget build(BuildContext context) {
     super.build(context);
     final size = MediaQuery.of(context).size;
-    final int isCheck = Provider.of<IsCheckModel>(context).value;
-    var login = Provider.of<LoginInfoModel>(context);
+    // final int isCheck = Store.value<IsCheckModel>(context).value;
+    // print(isCheck);
+    // var login = Provider.of<LoginInfoModel>(context);
 
     // 样式布局
     Widget _userInfo() {
@@ -68,40 +71,44 @@ class _PersonalState extends State<Personal>
 
     Widget _buttonOption() {
       return new Container(
-        width: size.width,
-        decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0),
-                topRight: Radius.circular(16.0))),
-        child: Column(
-          children: <Widget>[
-            ListTile(
-                leading: Icon(Icons.reorder),
-                title: Text('我的订单'),
-                trailing: Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  final String id = convert.jsonDecode(login.value)["id"];
-                  NavigatorUtil.goSuccessOrder(context, isCheck, id, 0);
-                }),
-            ListTile(
-              leading: Icon(Icons.power_settings_new),
-              title: Text('退出登录'),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                login.clear();
-                NavigatorUtil.logout(context);
-              },
-            ),
-            new split(),
-            ListTile(
-                leading: Icon(Icons.perm_data_setting),
-                title: Text('系统设置'),
-                trailing: Icon(Icons.arrow_forward_ios)),
-          ],
-        ),
-      );
+          width: size.width,
+          decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.0),
+                  topRight: Radius.circular(16.0))),
+          child:
+              Store.connect<IsCheckModel>(builder: (context, snapshot, child) {
+            return Column(
+              children: <Widget>[
+                ListTile(
+                    leading: Icon(Icons.reorder),
+                    title: Text('我的订单'),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      final String id = convert.jsonDecode(
+                          SpUtil.preferences.get('PRES_USER_INFO_KEY'))["id"];
+                      NavigatorUtil.goSuccessOrder(
+                          context, snapshot.value, id, 0);
+                    }),
+                ListTile(
+                  leading: Icon(Icons.power_settings_new),
+                  title: Text('退出登录'),
+                  trailing: Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    snapshot.clear();
+                    NavigatorUtil.logout(context);
+                  },
+                ),
+                new split(),
+                ListTile(
+                    leading: Icon(Icons.perm_data_setting),
+                    title: Text('系统设置'),
+                    trailing: Icon(Icons.arrow_forward_ios)),
+              ],
+            );
+          }));
     }
 
     return Scaffold(

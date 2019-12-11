@@ -4,8 +4,9 @@ import 'package:fubin/config/util.dart';
 import 'package:fubin/bean/order_entity.dart';
 
 class OrderListModel with ChangeNotifier {
-  List orderList;
-  List get value => orderList;
+  List orderList = [];
+  List successList = [];
+  List get value => isCheck == 0 ? orderList : successList;
 
   final int isCheck;
   final int page;
@@ -25,7 +26,12 @@ class OrderListModel with ChangeNotifier {
         .then((res) {
       Order order = new Order(res);
       if (order.code == 0) {
-        orderList = order.datas;
+        // orderList = order.datas;
+        if (isCheck == 0) {
+          orderList = order.datas;
+        } else {
+          successList = order.datas;
+        }
         notifyListeners();
       }
     });

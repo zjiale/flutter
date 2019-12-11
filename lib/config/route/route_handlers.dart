@@ -2,6 +2,7 @@ import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:fubin/base/bottom_navigation.dart';
 import 'package:fubin/model/change_msg_model.dart';
+import 'package:fubin/model/index.dart' show Store;
 import 'package:fubin/model/is_check_model.dart';
 import 'package:fubin/model/login_info_model.dart';
 import 'package:fubin/pages/detail_info.dart';
@@ -27,17 +28,14 @@ var loginHandler = new Handler(
 // 首页
 var bottomNavigationHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return MultiProvider(
-    providers: [
-      ChangeNotifierProvider.value(
-        value: IsCheckModel(),
-      ),
-      ChangeNotifierProvider.value(
-        value: LoginInfoModel(),
-      )
-    ],
-    child: BottomNavigation(),
-  );
+  return Store.init(
+      context: context,
+      child: Builder(
+        builder: (context) {
+          Store.widgetCtx = context;
+          return BottomNavigation();
+        },
+      ));
 });
 
 // 已完成订单列表
@@ -47,23 +45,18 @@ var successOrderHandler = new Handler(
   String id = params["id"]?.first;
   String page = params["page"]?.first;
 
-  return MultiProvider(
-    providers: [
-      ChangeNotifierProvider.value(
-        value: OrderListModel(
-            isCheck: FluroConvertUtils.string2int(isCheck),
-            id: id,
-            page: FluroConvertUtils.string2int(page)),
-      ),
-      ChangeNotifierProvider.value(
-        value: IsCheckModel(),
-      )
-    ],
+  return ChangeNotifierProvider.value(
+    value: OrderListModel(
+        isCheck: FluroConvertUtils.string2int(isCheck),
+        id: id,
+        page: FluroConvertUtils.string2int(page)),
     child: Scaffold(
       appBar: AppBar(title: new Text('我的订单')),
       body: MyOrder(),
     ),
   );
+
+  // );
 });
 
 var detailInfoHandler = new Handler(

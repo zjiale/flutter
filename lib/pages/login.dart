@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fubin/config/route/navigator_util.dart';
-import 'package:provider/provider.dart';
+import 'package:fubin/model/index.dart' show Store;
 import 'package:fubin/model/login_info_model.dart';
 
 class Login extends StatefulWidget {
@@ -20,7 +20,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    var login = Provider.of<LoginInfoModel>(context);
     // 触摸收起键盘
     return new GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -42,61 +41,14 @@ class _LoginState extends State<Login> {
                   Form(
                     key: _loginInfo,
                     child: Column(
-                      children: <Widget>[
-                        TextFormField(
-                          maxLength: 11,
-                          decoration: InputDecoration(hintText: '请输入手机号'),
-                          inputFormatters: [
-                            WhitelistingTextInputFormatter.digitsOnly
-                          ],
-                          validator: (phone) =>
-                              phone.length < 11 ? '请输入正确的手机号' : null,
-                          onSaved: (phone) {
-                            _phone = phone;
-                          },
-                        ),
-                        TextFormField(
-                          obscureText: true, //是否隐藏密码
-                          decoration: InputDecoration(hintText: '请输入密码'),
-                          validator: (pwd) => pwd.isEmpty ? '密码不能为空' : null,
-                          onSaved: (pwd) {
-                            _password = pwd;
-                          },
-                        )
-                      ],
+                      children: <Widget>[phone(), password()],
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                   ),
                   Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: OutlineButton(
-                          shape: shape,
-                          borderSide: BorderSide(color: Colors.blue[200]),
-                          highlightedBorderColor: Colors.blue[200],
-                          child: Text('登录',
-                              style: TextStyle(color: Colors.blue[200])),
-                          onPressed: () async {
-                            var _form = _loginInfo.currentState;
-
-                            if (_form.validate()) {
-                              // 触发text得onsave方法
-                              _form.save();
-                              Map<String, dynamic> params = {
-                                'name': _phone,
-                                'pwd': _password
-                              };
-                              await login.userLogin(params);
-                              if (login.value != null) {
-                                NavigatorUtil.goBottomNavigation(context);
-                              }
-                            }
-                          },
-                        ),
-                      )
-                    ],
+                    children: <Widget>[Expanded(child: login())],
                   )
                 ],
               ),
@@ -105,5 +57,52 @@ class _LoginState extends State<Login> {
         )),
       ),
     );
+  }
+
+  Widget phone() {
+    return TextFormField(
+      maxLength: 11,
+      decoration: InputDecoration(hintText: '请输入手机号'),
+      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+      validator: (phone) => phone.length < 11 ? '请输入正确的手机号' : null,
+      onSaved: (phone) {
+        _phone = phone;
+      },
+    );
+  }
+
+  Widget password() {
+    return TextFormField(
+      obscureText: true, //是否隐藏密码
+      decoration: InputDecoration(hintText: '请输入密码'),
+      validator: (pwd) => pwd.isEmpty ? '密码不能为空' : null,
+      onSaved: (pwd) {
+        _password = pwd;
+      },
+    );
+  }
+
+  Widget login() {
+    return Store.connect<LoginInfoModel>(builder: (context, snapshot, child) {
+      return OutlineButton(
+        shape: shape,
+        borderSide: BorderSide(color: Colors.blue[200]),
+        highlightedBorderColor: Colors.blue[200],
+        child: Text('登录', style: TextStyle(color: Colors.blue[200])),
+        onPressed: () async {
+          var _form = _loginInfo.currentState;
+
+          if (_form.validate()) {
+            // 触发text得onsave方法
+            _form.save();
+            Map<String, dynamic> params = {'name': _phone, 'pwd': _password};
+            await snapshot.userLogin(params);
+            if (snapshot.value != null) {
+              NavigatorUtil.goBottomNavigation(context);
+            }
+          }
+        },
+      );
+    });
   }
 }

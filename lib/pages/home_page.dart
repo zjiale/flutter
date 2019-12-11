@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/config/cache.dart';
-import 'package:fubin/model/is_check_model.dart';
-import 'package:fubin/model/login_info_model.dart';
+import 'package:fubin/model/index.dart' show Store;
 import 'package:fubin/pages/login.dart';
 import 'package:fubin/base/bottom_navigation.dart';
-import 'package:provider/provider.dart';
 
 /// This Widget is the main application widget.
 class HomePage extends StatelessWidget {
@@ -14,14 +12,31 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var userInfo = SpUtil.preferences.get(_StorageKey);
-    return MaterialApp(
-      title: _HomeTitle,
-      home: MultiProvider(providers: [
-        ChangeNotifierProvider.value(value: LoginInfoModel()),
-        ChangeNotifierProvider.value(
-          value: IsCheckModel(),
-        )
-      ], child: userInfo != null ? BottomNavigation() : Login()),
-    );
+    Widget entrance = userInfo != null ? BottomNavigation() : Login();
+
+    return Store.init(
+        context: context,
+        child: MaterialApp(
+          title: _HomeTitle,
+          home: Builder(
+            builder: (context) {
+              Store.widgetCtx = context;
+              return entrance;
+            },
+          ),
+        ));
+
+    // return MaterialApp(
+    //   title: _HomeTitle,
+    //   home: userInfo != null
+    //       ? ChangeNotifierProvider.value(
+    //             value: IsCheckModel(),
+    //             child: BottomNavigation(),
+    //           )
+    //       : ChangeNotifierProvider.value(
+    //           value: LoginInfoModel(),
+    //           child: Login(),
+    //         ),
+    // );
   }
 }
