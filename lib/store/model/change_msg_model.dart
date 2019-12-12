@@ -24,4 +24,10 @@ class ChangeMsgModel with ChangeNotifier {
   Future finshMsg(List<File> _imgFile) {
     return request(path['UploadImg'], params: _imgFile).then((res) {});
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 }

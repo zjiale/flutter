@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fubin/base/bottom_navigation.dart';
 
 import 'package:fubin/store/index.dart'
-    show Store, ChangeMsgModel, OrderListModel;
+    show Store, ChangeMsgModel, OrderListModel, IsCheckModel;
 import 'package:fubin/pages/detail_info.dart';
 import 'package:fubin/pages/login.dart';
 import 'package:fubin/pages/my_order.dart';
@@ -43,16 +43,27 @@ var successOrderHandler = new Handler(
   String id = params["id"]?.first;
   String page = params["page"]?.first;
 
-  return ChangeNotifierProvider.value(
-    value: OrderListModel(
-        isCheck: FluroConvertUtils.string2int(isCheck),
-        id: id,
-        page: FluroConvertUtils.string2int(page)),
-    child: Scaffold(
-      appBar: AppBar(title: new Text('我的订单')),
-      body: MyOrder(),
-    ),
-  );
+  return
+      // MultiProvider(
+      //   providers: [
+      //     ChangeNotifierProvider.value(
+      //         value: OrderListModel(
+      //             isCheck: FluroConvertUtils.string2int(isCheck),
+      //             id: id,
+      //             page: FluroConvertUtils.string2int(page))),
+      //     ChangeNotifierProvider.value(
+      //       value: IsCheckModel(),
+      //     )
+      //   ],
+      ChangeNotifierProvider.value(
+          value: OrderListModel(
+              isCheck: FluroConvertUtils.string2int(isCheck),
+              id: id,
+              page: FluroConvertUtils.string2int(page)),
+          child: Scaffold(
+            appBar: AppBar(title: new Text('我的订单')),
+            body: MyOrder(),
+          ));
 
   // );
 });

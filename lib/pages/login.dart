@@ -100,6 +100,7 @@ class _LoginState extends State<Login> {
               if (snapshot.value != null) {
                 NavigatorUtil.goBottomNavigation(context);
               } else {
+                FocusScope.of(context).requestFocus(FocusNode());
                 Toast.toast(context,
                     msg: "$res", position: ToastPostion.bottom);
               }

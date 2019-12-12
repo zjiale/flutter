@@ -8,10 +8,10 @@ import 'package:fubin/base/bottom_navigation.dart';
 class HomePage extends StatelessWidget {
   static const String _HomeTitle = '富斌易购';
   static const String _StorageKey = 'PRES_USER_INFO_KEY';
+  var userInfo = SpUtil.preferences.get(_StorageKey);
 
   @override
   Widget build(BuildContext context) {
-    var userInfo = SpUtil.preferences.get(_StorageKey);
     Widget entrance = userInfo != null ? BottomNavigation() : Login();
 
     return Store.init(

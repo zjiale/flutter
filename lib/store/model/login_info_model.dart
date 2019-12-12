@@ -24,5 +24,6 @@ class LoginInfoModel with ChangeNotifier {
 
   clear() {
     SpUtil.preferences.remove(_key);
+    // dispose();
   }
 }

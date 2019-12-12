@@ -2,7 +2,13 @@ import 'dart:convert' as convert;
 import 'package:flutter/material.dart' show BuildContext;
 import 'package:fubin/config/cache.dart';
 import 'package:provider/provider.dart'
-    show ChangeNotifierProvider, MultiProvider, Consumer, Provider;
+    show
+        ChangeNotifierProvider,
+        MultiProvider,
+        Consumer,
+        Consumer2,
+        Consumer3,
+        Provider;
 import 'model/index.dart' show OrderListModel, IsCheckModel, LoginInfoModel;
 
 export 'model/index.dart';
@@ -24,7 +30,12 @@ class Store {
 
       return MultiProvider(
         providers: [
-          ChangeNotifierProvider(builder: (_) => IsCheckModel()),
+          /* 
+            provider得value方法不会释放model得资源，而另一种方式在widget树删除之后
+            就会调用dispose方法把资源释放数据就会清空。这里OrderListModel只能使用
+            builder方法，在打开我的订单得时候需要释放数据重置才行。
+           */
+          ChangeNotifierProvider.value(value: IsCheckModel()),
           ChangeNotifierProvider(
             builder: (_) =>
                 OrderListModel(isCheck: isCheck, id: id, page: page),
@@ -36,8 +47,8 @@ class Store {
         child: child,
       );
     } else {
-      return ChangeNotifierProvider.value(
-        value: LoginInfoModel(),
+      return ChangeNotifierProvider(
+        builder: (_) => LoginInfoModel(),
         child: child,
       );
     }
@@ -53,7 +64,11 @@ class Store {
     return Consumer<T>(builder: builder, child: child);
   }
 
-  // static Consumer2 connect2<T1,T2>({builder, child}) {
-  //   return Consumer2<T1,T2>(builder: builder, child: child);
-  // }
+  static Consumer2 connect2<A, B>({builder, child}) {
+    return Consumer2<A, B>(builder: builder, child: child);
+  }
+
+  static Consumer3 connect3<A, B, C>({builder, child}) {
+    return Consumer3<A, B, C>(builder: builder, child: child);
+  }
 }

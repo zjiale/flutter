@@ -35,6 +35,7 @@ class _MyOrderState extends State<MyOrder> {
       children: <Widget>[
         Store.connect<OrderListModel>(builder: (context, snapshot, child) {
           if (check.value == 1) order.getOrder();
+          // print(order.value);
           var list = orderList != null ? orderList : order.value;
           return _createListView(context, check.value, list);
         }),
@@ -59,7 +60,7 @@ class _MyOrderState extends State<MyOrder> {
               return GestureDetector(
                   child: _detailInfo(orderList[i]),
                   onTap: () {
-                    print(isCheck);
+                    // print(isCheck);
                     NavigatorUtil.goDetailInfo(context, isCheck, orderList[i])
                         .then((result) {
                       if (result == "refresh") _onRefresh();

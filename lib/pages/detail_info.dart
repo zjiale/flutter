@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,8 @@ import 'package:fubin/config/route/navigator_util.dart';
 import 'package:fubin/config/util.dart';
 import 'package:fubin/store/index.dart' show Store, ChangeMsgModel;
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:jpush_flutter/jpush_flutter.dart';
 
 class DetailInfo extends StatefulWidget {
   @override
@@ -25,6 +28,41 @@ class _DetailInfoState extends State<DetailInfo> {
       TextStyle(fontSize: 17, fontWeight: FontWeight.bold);
   final TelAndSmsService _service = locator<TelAndSmsService>();
   TextEditingController _phoneController = TextEditingController();
+
+  String debugLable = 'Unknown'; /*错误信息*/
+  final JPush jpush = new JPush(); /* 初始化极光插件*/
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState(); /*极光插件平台初始化*/
+  }
+
+  // 推送测试
+  Future<void> initPlatformState() async {
+    String platformVersion;
+
+    try {
+      /*监听响应方法的编写*/
+      jpush.addEventHandler(
+          onReceiveNotification: (Map<String, dynamic> message) async {
+        print(">>>>>>>>>>>>>>>>>flutter 接收到推送: $message");
+        setState(() {
+          debugLable = "接收到推送: $message";
+        });
+      });
+    } on PlatformException {
+      platformVersion = '平台版本获取失败，请检查！';
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      debugLable = platformVersion;
+    });
+  }
 
   // 转单
   Future<void> _transferTask(
@@ -94,6 +132,22 @@ class _DetailInfoState extends State<DetailInfo> {
     File _imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     if (_imageFile != null) {
+      /*三秒后出发本地推送*/
+      var fireDate = DateTime.fromMillisecondsSinceEpoch(
+          DateTime.now().millisecondsSinceEpoch + 3000);
+      var localNotification = LocalNotification(
+        id: 234,
+        title: '只是一个简单的推送测试',
+        buildId: 1,
+        content: '已经选择了一张图片了',
+        fireTime: fireDate,
+        subtitle: '推送测试',
+      );
+      jpush.sendLocalNotification(localNotification).then((res) {
+        setState(() {
+          debugLable = res;
+        });
+      });
     } else {
       return;
     }
