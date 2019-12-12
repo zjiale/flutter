@@ -6,9 +6,8 @@ import 'package:fubin/base/Toast.dart';
 import 'package:fubin/config/TelAndSmsService.dart';
 import 'package:fubin/config/route/navigator_util.dart';
 import 'package:fubin/config/util.dart';
-import 'package:fubin/model/change_msg_model.dart';
+import 'package:fubin/store/index.dart' show Store, ChangeMsgModel;
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class DetailInfo extends StatefulWidget {
   @override
@@ -70,12 +69,15 @@ class _DetailInfoState extends State<DetailInfo> {
                     "msgId": msgId,
                     "phone": _phoneController.text
                   };
-                  change.changeMsg(params).then((_) {
+                  change.changeMsg(params).then((res) {
                     if (change.value == 0) {
                       _phoneController.text = "";
                       Navigator.of(context).pop();
                       Toast.toast(context,
                           msg: "转单成功", position: ToastPostion.bottom);
+                    } else {
+                      Toast.toast(context,
+                          msg: "$res", position: ToastPostion.bottom);
                     }
                   });
                 }
@@ -100,7 +102,7 @@ class _DetailInfoState extends State<DetailInfo> {
   @override
   Widget build(BuildContext context) {
     var detailInfo = widget.orderInfo;
-    ChangeMsgModel change = Provider.of<ChangeMsgModel>(context);
+    ChangeMsgModel change = Store.value<ChangeMsgModel>(context);
 
     final Widget name = Container(
         margin: EdgeInsets.only(left: 5),

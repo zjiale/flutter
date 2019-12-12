@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/config/cache.dart';
-import 'package:fubin/model/index.dart' show Store;
+import 'package:fubin/store/index.dart' show Store;
 import 'package:fubin/pages/login.dart';
 import 'package:fubin/base/bottom_navigation.dart';
 
@@ -25,18 +25,5 @@ class HomePage extends StatelessWidget {
             },
           ),
         ));
-
-    // return MaterialApp(
-    //   title: _HomeTitle,
-    //   home: userInfo != null
-    //       ? ChangeNotifierProvider.value(
-    //             value: IsCheckModel(),
-    //             child: BottomNavigation(),
-    //           )
-    //       : ChangeNotifierProvider.value(
-    //           value: LoginInfoModel(),
-    //           child: Login(),
-    //         ),
-    // );
   }
 }

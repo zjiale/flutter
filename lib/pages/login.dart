@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fubin/base/Toast.dart';
 import 'package:fubin/config/route/navigator_util.dart';
-import 'package:fubin/model/index.dart' show Store;
-import 'package:fubin/model/login_info_model.dart';
+import 'package:fubin/store/index.dart' show Store, LoginInfoModel;
 
 class Login extends StatefulWidget {
   @override
@@ -96,10 +96,15 @@ class _LoginState extends State<Login> {
             // 触发text得onsave方法
             _form.save();
             Map<String, dynamic> params = {'name': _phone, 'pwd': _password};
-            await snapshot.userLogin(params);
-            if (snapshot.value != null) {
-              NavigatorUtil.goBottomNavigation(context);
-            }
+            snapshot.userLogin(params).then((res) {
+              if (snapshot.value != null) {
+                NavigatorUtil.goBottomNavigation(context);
+              } else {
+                Toast.toast(context,
+                    msg: "$res", position: ToastPostion.bottom);
+              }
+            });
+            // await snapshot.userLogin(params);
           }
         },
       );

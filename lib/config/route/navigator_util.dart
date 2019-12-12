@@ -1,7 +1,7 @@
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
-import 'package:fubin/bean/order_entity.dart';
+import 'package:fubin/store/bean/order_entity.dart';
 import 'package:fubin/config/route/application.dart';
 import 'package:fubin/config/route/routes.dart';
 import 'package:fubin/utils/fluro_convert_util.dart';

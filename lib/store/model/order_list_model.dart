@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/config/api.dart';
 import 'package:fubin/config/util.dart';
-import 'package:fubin/bean/order_entity.dart';
+import '../bean/order_entity.dart';
 
 class OrderListModel with ChangeNotifier {
-  List orderList = [];
-  List successList = [];
-  List get value => isCheck == 0 ? orderList : successList;
+  List _orderList = [];
+  List _successList = [];
+  List get value => isCheck == 0 ? _orderList : _successList;
 
   final int isCheck;
   final int page;
@@ -28,9 +28,9 @@ class OrderListModel with ChangeNotifier {
       if (order.code == 0) {
         // orderList = order.datas;
         if (isCheck == 0) {
-          orderList = order.datas;
+          _orderList = order.datas;
         } else {
-          successList = order.datas;
+          _successList = order.datas;
         }
         notifyListeners();
       }

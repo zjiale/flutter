@@ -3,9 +3,9 @@ import 'package:flutter/material.dart' show BuildContext;
 import 'package:fubin/config/cache.dart';
 import 'package:provider/provider.dart'
     show ChangeNotifierProvider, MultiProvider, Consumer, Provider;
-import 'package:fubin/model/order_list_model.dart' show OrderListModel;
-import 'package:fubin/model/is_check_model.dart' show IsCheckModel;
-import 'package:fubin/model/login_info_model.dart' show LoginInfoModel;
+import 'model/index.dart' show OrderListModel, IsCheckModel, LoginInfoModel;
+
+export 'model/index.dart';
 export 'package:provider/provider.dart';
 
 class Store {
@@ -52,4 +52,8 @@ class Store {
   static Consumer connect<T>({builder, child}) {
     return Consumer<T>(builder: builder, child: child);
   }
+
+  // static Consumer2 connect2<T1,T2>({builder, child}) {
+  //   return Consumer2<T1,T2>(builder: builder, child: child);
+  // }
 }

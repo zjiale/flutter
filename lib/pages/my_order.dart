@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/base/loading.dart';
 import 'package:fubin/config/route/navigator_util.dart';
-import 'package:fubin/model/index.dart';
-import 'package:fubin/model/is_check_model.dart';
-import 'package:fubin/model/order_list_model.dart';
+import 'package:fubin/store/index.dart'
+    show Store, IsCheckModel, OrderListModel;
+
 import 'package:provider/provider.dart';
 
 class MyOrder extends StatefulWidget {
@@ -13,7 +13,7 @@ class MyOrder extends StatefulWidget {
 
 class _MyOrderState extends State<MyOrder> {
   var orderList;
-  int isCheck;
+  // int isCheck;
   bool isLoading = false; //是否正在请求新数据
   bool offState = false; //是否显示进入页面时的圆形进度条
 
@@ -36,7 +36,7 @@ class _MyOrderState extends State<MyOrder> {
         Store.connect<OrderListModel>(builder: (context, snapshot, child) {
           if (check.value == 1) order.getOrder();
           var list = orderList != null ? orderList : order.value;
-          return _createListView(context, list);
+          return _createListView(context, check.value, list);
         }),
         Offstage(
           offstage: offState,
@@ -47,7 +47,7 @@ class _MyOrderState extends State<MyOrder> {
   }
 
   /* ListView布局 */
-  Widget _createListView(BuildContext context, List orderList) {
+  Widget _createListView(BuildContext context, int isCheck, List orderList) {
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: Container(
@@ -59,6 +59,7 @@ class _MyOrderState extends State<MyOrder> {
               return GestureDetector(
                   child: _detailInfo(orderList[i]),
                   onTap: () {
+                    print(isCheck);
                     NavigatorUtil.goDetailInfo(context, isCheck, orderList[i])
                         .then((result) {
                       if (result == "refresh") _onRefresh();

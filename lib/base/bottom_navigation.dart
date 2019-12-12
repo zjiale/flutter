@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/pages/error_order.dart';
 import 'package:fubin/pages/personal.dart';
-import 'package:fubin/model/is_check_model.dart';
-import 'package:provider/provider.dart';
+import 'package:fubin/store/index.dart' show Store, IsCheckModel;
 
 class BottomNavigation extends StatefulWidget {
   @override
@@ -69,7 +68,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   void _pageChange(int index) {
     if (index != _currentIndex) {
       setState(() {
-        Provider.of<IsCheckModel>(context).change(index);
+        Store.value<IsCheckModel>(context).change(index);
         _currentIndex = index;
       });
     }

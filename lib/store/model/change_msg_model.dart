@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fubin/bean/change_entity.dart';
+import '../bean/change_entity.dart';
 import 'package:fubin/config/api.dart';
 import 'package:fubin/config/util.dart';
 
@@ -12,9 +12,11 @@ class ChangeMsgModel with ChangeNotifier {
   Future changeMsg(final Map<String, dynamic> params) {
     return request(path['ChangeMsg'], params: params).then((res) {
       Change change = new Change(res);
-      if (change.code == 0) {
+      if (change.success == true) {
         _code = change.code;
         notifyListeners();
+      } else {
+        return change.massege;
       }
     });
   }

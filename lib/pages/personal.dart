@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fubin/base/split.dart';
 import 'package:fubin/config/cache.dart';
 import 'package:fubin/config/route/navigator_util.dart';
-import 'package:fubin/model/is_check_model.dart';
-import 'package:fubin/model/login_info_model.dart';
-import 'package:fubin/model/index.dart' show Store;
-import 'package:provider/provider.dart';
+import 'package:fubin/store/index.dart' show Store, IsCheckModel;
 
 class Personal extends StatefulWidget {
   @override
