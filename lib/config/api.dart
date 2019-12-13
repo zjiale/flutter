@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://zaylour.com:8280/open/";
+const API_BASE_URL = "https://www.gzfubin.com/open/";
 
 const path = {
   'Login': API_BASE_URL + 'app/api/login',

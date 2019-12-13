@@ -69,8 +69,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
   void _pageChange(int index) {
     if (index != _currentIndex) {
       setState(() {
-        Store.value<IsCheckModel>(context).change(index);
-        // Provider.of<IsCheckModel>(context).change(index);
+        // Store.value<IsCheckModel>(context).change(index);
+        Provider.of<IsCheckModel>(context).change(index);
         _currentIndex = index;
       });
     }
