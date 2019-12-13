@@ -9,7 +9,6 @@ import 'package:fubin/config/route/navigator_util.dart';
 import 'package:fubin/config/util.dart';
 import 'package:fubin/store/index.dart' show Store, ChangeMsgModel;
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/services.dart';
 import 'package:jpush_flutter/jpush_flutter.dart';
 
 class DetailInfo extends StatefulWidget {

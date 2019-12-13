@@ -30,18 +30,17 @@ class _MyOrderState extends State<MyOrder> {
   @override
   Widget build(BuildContext context) {
     var check = Store.value<IsCheckModel>(context);
-    var order = Store.value<OrderListModel>(context);
+
     return Stack(
       children: <Widget>[
         Store.connect<OrderListModel>(builder: (context, snapshot, child) {
-          if (check.value == 1) order.getOrder();
-          // print(order.value);
-          var list = orderList != null ? orderList : order.value;
+          if (check.value == 1) snapshot.getOrder();
+          var list = orderList != null ? orderList : snapshot.value;
           return _createListView(context, check.value, list);
         }),
         Offstage(
           offstage: offState,
-          child: loading(),
+          child: Loading(),
         )
       ],
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fubin/pages/error_order.dart';
 import 'package:fubin/pages/personal.dart';
-import 'package:fubin/store/index.dart' show Store, IsCheckModel;
+import 'package:fubin/store/index.dart' show IsCheckModel;
 import 'package:provider/provider.dart';
 
 class BottomNavigation extends StatefulWidget {

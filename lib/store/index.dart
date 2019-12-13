@@ -35,7 +35,7 @@ class Store {
             就会调用dispose方法把资源释放数据就会清空。这里OrderListModel只能使用
             builder方法，在打开我的订单得时候需要释放数据重置才行。
            */
-          ChangeNotifierProvider.value(value: IsCheckModel()),
+          ChangeNotifierProvider(builder: (_) => IsCheckModel()),
           ChangeNotifierProvider(
             builder: (_) =>
                 OrderListModel(isCheck: isCheck, id: id, page: page),

@@ -84,7 +84,7 @@ class _PersonalState extends State<Personal>
                     title: Text('我的订单'),
                     trailing: Icon(Icons.arrow_forward_ios),
                     onTap: () {
-                      // print(check.value);
+                      print(check.value);
                       final String id = userInfo["id"];
                       NavigatorUtil.goSuccessOrder(context, check.value, id, 0);
                     }),
@@ -97,7 +97,7 @@ class _PersonalState extends State<Personal>
                     NavigatorUtil.logout(context);
                   },
                 ),
-                new split(),
+                new Split(),
                 ListTile(
                     leading: Icon(Icons.perm_data_setting),
                     title: Text('系统设置'),

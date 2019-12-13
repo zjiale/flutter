@@ -1,4 +1,3 @@
-import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:fubin/base/bottom_navigation.dart';
 
@@ -43,29 +42,32 @@ var successOrderHandler = new Handler(
   String id = params["id"]?.first;
   String page = params["page"]?.first;
 
-  return
-      // MultiProvider(
-      //   providers: [
-      //     ChangeNotifierProvider.value(
-      //         value: OrderListModel(
-      //             isCheck: FluroConvertUtils.string2int(isCheck),
-      //             id: id,
-      //             page: FluroConvertUtils.string2int(page))),
-      //     ChangeNotifierProvider.value(
-      //       value: IsCheckModel(),
-      //     )
-      //   ],
-      ChangeNotifierProvider.value(
-          value: OrderListModel(
-              isCheck: FluroConvertUtils.string2int(isCheck),
-              id: id,
-              page: FluroConvertUtils.string2int(page)),
-          child: Scaffold(
-            appBar: AppBar(title: new Text('我的订单')),
-            body: MyOrder(),
-          ));
+  return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            builder: (_) => OrderListModel(
+                isCheck: FluroConvertUtils.string2int(isCheck),
+                id: id,
+                page: FluroConvertUtils.string2int(page))),
+        ChangeNotifierProvider(
+          builder: (_) => IsCheckModel(),
+        )
+      ],
+      child: Scaffold(
+        appBar: AppBar(title: new Text('我的订单')),
+        body: MyOrder(),
+      )
+      // ChangeNotifierProvider.value(
+      //     value: OrderListModel(
+      //         isCheck: FluroConvertUtils.string2int(isCheck),
+      //         id: id,
+      //         page: FluroConvertUtils.string2int(page)),
+      //     child: Scaffold(
+      //       appBar: AppBar(title: new Text('我的订单')),
+      //       body: MyOrder(),
+      //     ));
 
-  // );
+      );
 });
 
 var detailInfoHandler = new Handler(
@@ -75,8 +77,8 @@ var detailInfoHandler = new Handler(
 
   return new Scaffold(
     appBar: AppBar(title: Text('订单详情')),
-    body: ChangeNotifierProvider.value(
-      value: ChangeMsgModel(),
+    body: ChangeNotifierProvider(
+      builder: (_) => ChangeMsgModel(),
       child: DetailInfo(
           isCheck: FluroConvertUtils.string2int(isCheck),
           orderInfo: FluroConvertUtils.string2map(orderInfo)),

@@ -1,5 +1,3 @@
-import 'dart:convert' as convert;
-
 import 'package:flutter/material.dart';
 import 'package:fubin/store/bean/order_entity.dart';
 import 'package:fubin/config/route/application.dart';
